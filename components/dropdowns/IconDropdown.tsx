@@ -2,8 +2,6 @@
 
 import React from "react";
 import { useOutsideClick } from "@/lib/useOutsideClick";
-import { SunIcon } from "@phosphor-icons/react/dist/icons/Sun";
-import { useTheme } from "@/providers/ThemeProvider";
 interface IconDropdownProps {
   id?: string;
   label?: string;
@@ -20,7 +18,6 @@ const IconDropdown: React.FC<IconDropdownProps> = ({
   const [isOpen, setIsOpen] = React.useState(false);
 
   const dropdownRef = useOutsideClick<HTMLDivElement>(() => setIsOpen(false));
-  const theme = useTheme();
   return (
     <div id={id} className={`relative ${className}`} ref={dropdownRef}>
       <button

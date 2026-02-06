@@ -9,10 +9,10 @@ interface ThemeState {
 
 const getInitialTheme = (): Theme => {
   if (typeof window === "undefined") {
-    return "light";
+    return "system";
   }
   const storedTheme =
-    (localStorage.getItem(STORAGE_KEY) as Theme | null) || "light";
+    (localStorage.getItem(STORAGE_KEY) as Theme | null) || "system";
   return storedTheme;
 };
 

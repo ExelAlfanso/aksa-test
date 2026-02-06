@@ -28,20 +28,20 @@ This project is developed as part of the **PT Aksamedia Mulia Digital Frontend D
 - [x] **Query string persistence** - Page number and search term synced to URL
 - [x] **State restoration** - Page and search state restored from query params
 
-### ⚠️ Theme Management
+### ✅ Theme Management
 
 - [x] **Dark/Light mode** - Light and dark modes supported
-- [ ] **System preference detection** - ⚠️ PENDING - System mode does not track OS yet
+- [x] **System preference detection** - System mode follows OS preference
 - [x] **Dynamic theme switching** - Available via navbar dropdown
 - [x] **Theme persistence** - Saved to localStorage
-- [ ] **OS change detection** - ⚠️ PENDING - Needs `matchMedia` listener
+- [x] **OS change detection** - Listens to `matchMedia` changes
 
-### ⚠️ User Profile Management
+### ✅ User Profile Management
 
-- [ ] **User profile edit page** - ⚠️ PENDING - Route and page component needed
-- [ ] **Edit full name** - ⚠️ PENDING - Profile edit form needed
-- [ ] **Auto navbar update** - ⚠️ PENDING - Must sync when profile changes
-- [ ] **Change persistence** - ⚠️ PENDING - Already handled by auth store persist
+- [x] **User profile edit page** - `/profile` page available
+- [x] **Edit full name** - Profile form updates username
+- [x] **Auto navbar update** - Navbar reflects updated name from store
+- [x] **Change persistence** - Stored via auth persist middleware
 - [x] **Backend structure ready** - `updateName()` method exists in auth store
 
 ### ✅ Technical Requirements
@@ -56,44 +56,30 @@ This project is developed as part of the **PT Aksamedia Mulia Digital Frontend D
 
 ## Completion Checklist
 
-| Category                   | Status             | Items     | Progress |
-| -------------------------- | ------------------ | --------- | -------- |
-| **Authentication**         | ✅ Complete        | 8/8       | 100%     |
-| **CRUD Operations**        | ✅ Complete        | 6/6       | 100%     |
-| **Theme Management**       | ⚠️ Partial         | 3/5       | 60%      |
-| **User Profile**           | ⚠️ Pending         | 1/4       | 25%      |
-| **Technical Requirements** | ✅ Complete        | 5/5       | 100%     |
-| **TOTAL**                  | **🟡 In Progress** | **23/28** | **82%**  |
+| Category                   | Status          | Items     | Progress |
+| -------------------------- | --------------- | --------- | -------- |
+| **Authentication**         | ✅ Complete     | 8/8       | 100%     |
+| **CRUD Operations**        | ✅ Complete     | 6/6       | 100%     |
+| **Theme Management**       | ✅ Complete     | 5/5       | 100%     |
+| **User Profile**           | ✅ Complete     | 5/5       | 100%     |
+| **Technical Requirements** | ✅ Complete     | 5/5       | 100%     |
+| **TOTAL**                  | **🟢 Complete** | **28/28** | **100%** |
 
 ### TODO List for Remaining Features
 
-1. **System Theme Sync**
+1. **Auth Guard UX**
 
-- Set default theme to `system`
-- Read OS preference via `matchMedia`
-- Listen for OS theme changes and update UI
-
-2. **User Profile Edit Page**
-   - Create new route `/profile` or `/settings`
-   - Form to edit user's full name
-   - Update user state in auth store
-   - Show success/confirmation message
-   - Return to dashboard or auto-update navbar
-
-3. **Navbar Auto-Update**
-   - Subscribe to auth store changes
-   - Update username display when profile is edited
-   - No page reload required
+- Add a loading/skeleton state while auth is hydrating
 
 ---
 
 ## Features
 
 - 🔐 **Authentication** - Login/Logout with persistent user state
-- 🎨 **Theme Switching** - Light/Dark theme with persistence (system sync pending)
+- 🎨 **Theme Switching** - Light/Dark/System with OS sync
 - 📦 **Product Management** - CRUD operations using localStorage
 - 📊 **Pagination** - Custom product pagination (5 per page)
-- 👤 **User Profile Backend** - Structure ready for profile management
+- 👤 **User Profile** - Edit username with persisted state
 - 🎯 **Responsive Design** - Mobile-first approach with Tailwind CSS
 - 🧩 **Component Architecture** - Reusable, well-organized components
 
@@ -114,6 +100,9 @@ app/                                    # Next.js App Router
 │   │   │   └── page.tsx               # Home page (empty)
 │   │   ├── products/
 │   │   │   └── page.tsx               # Products CRUD page
+│   │   ├── profile/
+│   │   │   ├── page.tsx               # Profile page (server wrapper)
+│   │   │   └── ProfileClientPage.tsx  # Profile form and logic
 │   │   └── layout.tsx                 # Navigation bar wrapper
 │   └── layout.tsx                     # Theme layout with useTheme hook
 ├── layout.tsx                         # Root layout with ThemeProvider
@@ -289,7 +278,7 @@ Password: password
 - Select one of three options:
   - **Light** - Light mode UI
   - **Dark** - Dark mode UI
-  - **System** - Available but OS sync is pending
+  - **System** - Follows OS preference and updates automatically
 
 **How it works:**
 
