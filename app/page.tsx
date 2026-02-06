@@ -1,18 +1,8 @@
 "use client";
-import { useAuthStore } from "@/store/auth.store";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+
+import useAuthGuard from "@/hooks/useAuthGuard";
 
 export default function Home() {
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!isAuthenticated) {
-      router.push("/login");
-    }
-    router.push("/products");
-  }, [isAuthenticated, router]);
-
+  useAuthGuard();
   return;
 }

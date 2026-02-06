@@ -1,6 +1,8 @@
-import { useRouter } from "next/navigation";
+"use client";
+
+import useAuthGuard from "@/hooks/useAuthGuard";
 
 export default function HomePage() {
-  const router = useRouter();
-  return <div></div>;
+  useAuthGuard();
+  return;
 }

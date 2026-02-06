@@ -8,17 +8,49 @@ import { productService } from "@/services/product.service";
 import { Product } from "@/lib/types/product";
 import { useEffect, useState } from "react";
 import PaginationControls from "@/components/PaginationControls";
+import { useRouter, useSearchParams } from "next/navigation";
+import SearchInputField from "@/components/inputfields/SearchInputField";
+import useAuthGuard from "@/hooks/useAuthGuard";
 
 export default function ProductsPage() {
+  useAuthGuard();
+
+  const query = useSearchParams();
+  const router = useRouter();
+  const searchQuery = query.get("search") || "";
+  const pageQuery = query.get("page") || "1";
+
   const [products, setProducts] = useState<Product[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | undefined>();
-  const [page, setPage] = useState(1);
 
+  const [searchTerm, setSearchTerm] = useState(searchQuery);
+
+  const filteredProducts = products.filter(
+    (product) =>
+      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.category.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
+  const [page, setPage] = useState(Number(pageQuery));
   const pageSize = 5;
-  const totalPages = Math.max(1, Math.ceil(products.length / pageSize));
-  const pagedProducts = products.slice((page - 1) * pageSize, page * pageSize);
+  const totalPages = Math.max(1, Math.ceil(filteredProducts.length / pageSize));
+  const pagedProducts = filteredProducts.slice(
+    (page - 1) * pageSize,
+    page * pageSize,
+  );
 
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (page !== 1) {
+      params.append("page", page.toString());
+    }
+    if (searchTerm) {
+      params.append("search", searchTerm);
+    }
+    const queryString = params.toString();
+    const newUrl = queryString ? `/products?${queryString}` : "/products";
+    router.replace(newUrl);
+  }, [page, searchTerm, router]);
   useEffect(() => {
     if (page > totalPages) {
       setPage(totalPages);
@@ -29,6 +61,14 @@ export default function ProductsPage() {
     setProducts(productService.getAll());
   }, []);
 
+  const handleSearch = (term: string) => {
+    setSearchTerm(term);
+    setPage(1);
+  };
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+  };
   const handleCreate = (data: Omit<Product, "id" | "createdAt">) => {
     const newProduct = productService.create(data);
     setProducts([...products, newProduct]);
@@ -64,11 +104,23 @@ export default function ProductsPage() {
 
   return (
     <div className="container max-w-6xl p-6 mx-auto">
-      <div className="flex items-center justify-between mb-6">
-        <HeaderOne>Products</HeaderOne>
-        {!showForm && (
-          <Button onClick={() => setShowForm(true)}>Add Product</Button>
-        )}
+      <div className="flex flex-row items-center justify-between mb-6 ">
+        <HeaderOne className="w-full ">Products</HeaderOne>
+        <div className="flex flex-col w-full gap-4 md:flex-row">
+          <SearchInputField
+            className="w-full md:w-64"
+            searchTerm={searchTerm}
+            handleSearch={handleSearch}
+          ></SearchInputField>
+          {!showForm && (
+            <Button
+              className="w-full md:w-64 "
+              onClick={() => setShowForm(true)}
+            >
+              Add Product
+            </Button>
+          )}
+        </div>
       </div>
 
       {showForm && (
@@ -81,7 +133,7 @@ export default function ProductsPage() {
         </div>
       )}
 
-      {products.length === 0 ? (
+      {filteredProducts.length === 0 ? (
         <Text className="text-center text-muted-foreground">
           No products yet
         </Text>
@@ -95,7 +147,7 @@ export default function ProductsPage() {
       <PaginationControls
         page={page}
         totalPages={totalPages}
-        setPage={setPage}
+        setPage={handlePageChange}
       ></PaginationControls>
     </div>
   );

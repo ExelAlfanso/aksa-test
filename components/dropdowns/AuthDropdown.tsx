@@ -15,7 +15,10 @@ export default function AuthDropdown({ username }: AuthDropdownProps) {
       {user == null ? (
         <DropdownItem href="/login">Login</DropdownItem>
       ) : (
-        <DropdownItem href="/logout">Logout</DropdownItem>
+        <>
+          <DropdownItem href="/profile">Profile</DropdownItem>
+          <DropdownItem href="/logout">Logout</DropdownItem>
+        </>
       )}
     </Dropdown>
   );

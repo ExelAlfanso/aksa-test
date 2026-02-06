@@ -1,6 +1,7 @@
 "use client";
 import { HeaderOne, Text } from "@/components/Text";
 import Button from "@/components/buttons/Button";
+import InputField from "../inputfields/InputField";
 
 interface LoginFormProps {
   username: string;
@@ -25,36 +26,22 @@ export default function LoginForm({
     >
       <div className="flex flex-col p-4 mx-auto w-200">
         <HeaderOne className="text-center">Login</HeaderOne>
-        <label htmlFor="username" className="font-bold">
-          Username
-        </label>
-        <input
+        <InputField
+          id="username"
           type="text"
           name="username"
-          id="username"
-          className={`p-2 mb-2 border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 ${
-            error
-              ? "border-red-500 focus:ring-red-500"
-              : "border-border focus:ring-accent"
-          }`}
           value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <label htmlFor="password" className="font-bold">
-          Password
-        </label>
-        <input
+          setValue={setUsername}
+          label="Username"
+        ></InputField>
+        <InputField
+          id="password"
           type="password"
           name="password"
-          id="password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className={`p-2 mb-4 border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 ${
-            error
-              ? "border-red-500 focus:ring-red-500"
-              : "border-border focus:ring-accent"
-          }`}
-        />
+          setValue={setPassword}
+          label="Password"
+        ></InputField>
         {error && <Text className="mb-4 text-sm text-red-500">{error}</Text>}
         <Button type="submit">Login</Button>
       </div>
